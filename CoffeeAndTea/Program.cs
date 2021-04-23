@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.IO;
 
@@ -8,6 +8,7 @@ namespace CoffeeAndTea
     {
         static void Main(string[] args)
         {
+
             List<Drinks> drinks = new List<Drinks>();
             StreamReader reader = new StreamReader("StoreList.txt");
           
@@ -38,4 +39,6 @@ namespace CoffeeAndTea
 
         
     }
+
+
 }
