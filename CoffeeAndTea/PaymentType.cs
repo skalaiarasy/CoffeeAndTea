@@ -2,6 +2,7 @@
 {
     class PaymentType
     {
+
         private string _name;
         private decimal _payment;
         public string Name
@@ -9,8 +10,7 @@
             get { return this._name; }
             set { this._name = value; }
         }
-
-        private decimal Money
+        private decimal Payment
         {
             get { return this._payment;  }
             set { this._payment = value; }
@@ -24,7 +24,7 @@
 
         public PaymentType()
         {
-            this._name = "";
+            this._name = "Not Applicable";
             this._payment = 0;
         }
 
@@ -33,5 +33,7 @@
             return $"{ this._name } { this._payment }";
         }
     }
+
+    // This class is by default CASH payment
 
 }

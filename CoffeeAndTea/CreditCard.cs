@@ -18,14 +18,14 @@
             set { this._expirationDate = value; }        }
 
 
-        private string CardNumber
+        public string CardNumber
         {
             get { return this._cardNumber; }
             set { this._cardNumber = value; }
         }
 
         //No default valud construction since card number would be req if user accept to pay with cards
-        public CreditCard(string cardNumber, string expirationDate, string securityCode, string name, decimal payment) : base (name, payment)
+        public CreditCard(string name, string cardNumber, string expirationDate, string securityCode, decimal payment) : base (name, payment)
         {
             this._cardNumber = cardNumber;
             this._expirationDate = expirationDate;

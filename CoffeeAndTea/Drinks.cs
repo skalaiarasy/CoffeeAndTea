@@ -46,12 +46,14 @@ namespace CoffeeAndTea
             this._type = type;
         }
 
-        public override string ToString()
+        public Drinks()
         {
 
-            return $"Category:{this._category}Name:{this._name} Price: {this._price} Type: {this._type}";
         }
 
-
+        public override string ToString()
+        {
+            return $"Category: {this._category}, Name:{this._name}, Price: {this._price}, Type: {this._type}";
+        }
     }
 }
