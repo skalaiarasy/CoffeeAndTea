@@ -1,6 +1,6 @@
 ﻿namespace CoffeeAndTea
 {
-    class Cash : Payment
+    class Cash : PaymentType
     {
         public Cash(string name, decimal payment) :base(name, payment)
         {

@@ -1,6 +1,6 @@
 ﻿namespace CoffeeAndTea
 {
-    class Payment
+    class PaymentType
     {
         private string _name;
         private decimal _payment;
@@ -16,10 +16,16 @@
             set { this._payment = value; }
         }
 
-        public Payment(string name, decimal payment)
+        public PaymentType(string name, decimal payment)
         {
             this._name = name;
             this._payment = payment;
+        }
+
+        public PaymentType()
+        {
+            this._name = "";
+            this._payment = 0;
         }
 
         public override string ToString()
