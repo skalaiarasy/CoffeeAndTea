@@ -44,80 +44,80 @@ namespace CoffeeAndTea
             reader.Close();
             Console.WriteLine("WELCOME to our COFFEE and TEA Shop!");
             int counter = 0;
-            foreach (Drinks drink in menu)
+            foreach (Drinks drinkDetails in menu)
             {
                 counter++;
-                Console.WriteLine($"{counter}. {drink}");
+                Console.WriteLine($"{counter}. {drinkDetails}");
             }
-        }
 
-        static List<string> UserMakingASelection(List<Drinks> listOfDrinks, int choice)
-        {
-            List<string> itemsPurchased = new List<string>();
-            //List<int> pricesPerItem = new List<int>();
+            List<string> itemOrdered = new List<string>();
+            List<string> itemPriced = new List<string>();
+            string itemName, itemPrice;
 
-            GetMenu();
-
-            bool runApplication = true;
-            while (runApplication)
+            Console.WriteLine("We are taking your order. Which item do you want?");
+            while (true)
             {
-                Console.WriteLine("\n\nWhat item would you like to order?");
-                choice = 0;
-                try
+                string userinput = Console.ReadLine().ToLower();
+                foreach (Drinks oneDrink in menu)
                 {
-                    choice = int.Parse(Console.ReadLine());
+                    if (oneDrink.Name.ToLower() == userinput)
+                    {
+                        string[] splittingRow = oneDrink.ToString().Split(",");
+                        itemName = splittingRow[1];
+                        itemPrice = splittingRow[2];
+                        Console.WriteLine($"{ itemName }: { itemPrice }");
+
+                        //Items name and price are being stored here to receipted
+                        itemOrdered.Add(itemName);
+                        itemPriced.Add(itemPrice);
+                    }
                 }
-                catch (Exception e)
-                {
-                    Console.Clear();
-                    Console.WriteLine("That was not a number.");
-                    continue;
-                }// everything above is working.
 
-                do
-                {
-                    // Initial purchasing
-                    string placeOrder = Console.ReadLine();
-                    Console.Clear();
-
-                    if (listOfDrinks.Count == choice)
-                    {
-                        itemsPurchased.Add(listOfDrinks);
-                        //pricesPerItem.Add(result);
-                        Console.WriteLine($"Adding {placeOrder} to cart at "); /*{result}*/
-                        break;
-                    }
-                    else
-                    {
-                        Console.WriteLine($"Sorry, we don't have {placeOrder}. Please try again.");
-                    }
-
-                } while (true);
-
-                // Check if they want to buy again
-                Console.WriteLine("Would you like to order anything else (y/n)?");
+                bool addItems = true;
+                Console.WriteLine("Would you like to add more items? y/n");
                 while (true)
                 {
-                    string loopChoice = Console.ReadLine();
-                    if (loopChoice == "y")
+                    string addCheck = Console.ReadLine();
+                    if (addCheck == "y")
                     {
+                        Console.WriteLine("What addtional items do you want?");
                         break;
                     }
-                    else if (loopChoice == "n")
+                    else if (addCheck == "n")
                     {
-                        runApplication = false;
+                        addItems = false;
                         break;
                     }
                     else
                     {
-                        Console.WriteLine("that was not a valid choice");
+                        Console.WriteLine("That was not a valid input.");
                     }
                 }
+
+                if (addItems == false)
+                {
+                    break;
+                }
             }
-            return itemsPurchased;
+
+            Console.Clear();
+            Console.WriteLine("Thank you for your order");
+            Console.WriteLine("These are your items:");
+            for (int i = 0; i < itemOrdered.Count; i++)
+            {
+                Console.WriteLine($"{itemOrdered[i] } \t{itemPriced[i]}");
+            }
+
+            double Total = 0;
+            double convertThePrice = Convert.ToDouble(itemPriced);
+            foreach (double value in convertThePrice.ToString())//add all values into averagePrice
+            {
+                Total += value;
+            }
+            //get average using averagePrice and list.Count
+            Total = Math.Round(Total, 2);
+            Console.WriteLine($"Your bill: ${Total}");
         }
-
-
         static void PaymentSelection(/*It's possible we will have to pass a parameter here*/)
         {
             PaymentDetails pd = new PaymentDetails();

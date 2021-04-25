@@ -40,6 +40,15 @@ namespace CoffeeAndTea
             }
         }
 
-
+        public static bool ValidatorInput(int userInput, int counter)
+        {
+            bool output = true;
+            if (userInput <= 0 || userInput > counter)
+            {
+                Console.WriteLine("Not less than 0 and more than the list");
+                output = false;
+            }
+            return output;
+        }
     }
 }
