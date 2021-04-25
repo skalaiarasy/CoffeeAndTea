@@ -35,8 +35,9 @@
         //It's possible we don't need to return the base value for payment
         public override string ToString()
         {
-            string result = base.ToString(); 
-            return $"{ result } "; // somehow, here we ned to return only the last four digit of the card number when printing the receipt.
+            string result = base.ToString();
+            return $"{this.GetType().Name.Substring(0,6)} Total Payment { result }\nLast four digits: {this._cardNumber} "; 
+            // somehow, here we ned to return only the last four digit of the card number when printing the receipt.
         }
 
     }

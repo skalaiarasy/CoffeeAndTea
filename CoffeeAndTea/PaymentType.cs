@@ -5,7 +5,7 @@
 
         private string _name;
         private decimal _payment;
-        public string Name
+        private string Name
         {
             get { return this._name; }
             set { this._name = value; }
@@ -30,7 +30,7 @@
 
         public override string ToString()
         {
-            return $"{ this._name } { this._payment }";
+            return $"{ this._payment }";
         }
     }
 

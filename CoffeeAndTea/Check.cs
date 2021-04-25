@@ -18,7 +18,7 @@
         public override string ToString()
         {
             string result =  base.ToString();
-            return $"{ result } CheckNumber: {this._checkNumber}";
+            return $"Payment Method: { this.GetType().Name }\nLast four digits of CheckNumber: {this._checkNumber}";
             // somehow we need to return the last four digit of the check number to the receipt.
         }
     }

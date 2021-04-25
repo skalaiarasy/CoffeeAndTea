@@ -9,13 +9,8 @@ namespace CoffeeAndTea
     {
         static void Main(string[] args)
         {
-            //GetMenu();
-            //Console.ReadLine();
-
-            PaymentDetails pd = new PaymentDetails();
-            decimal itemprice = 10;
-            PaymentType pt = TakingCashPayments(itemprice);
-            pd.TakingPayment(pt);
+            GetMenu();
+            PaymentSelection();
             Console.ReadLine();
         }
 
@@ -43,7 +38,6 @@ namespace CoffeeAndTea
 
                     //Console.WriteLine(drinkDetails.ToString());
                     menu.Add(drinkDetails);
-
                 }
             }
             // This will display all items to the screen
@@ -57,44 +51,137 @@ namespace CoffeeAndTea
             }
         }
 
-        static PaymentType TakingCashPayments(decimal itemPrice)
+        static List<string> UserMakingASelection(List<Drinks> listOfDrinks, int choice)
         {
-            string usersName;
+            List<string> itemsPurchased = new List<string>();
+            //List<int> pricesPerItem = new List<int>();
+
+            GetMenu();
+
+            bool runApplication = true;
+            while (runApplication)
+            {
+                Console.WriteLine("\n\nWhat item would you like to order?");
+                choice = 0;
+                try
+                {
+                    choice = int.Parse(Console.ReadLine());
+                }
+                catch (Exception e)
+                {
+                    Console.Clear();
+                    Console.WriteLine("That was not a number.");
+                    continue;
+                }// everything above is working.
+
+                do
+                {
+                    // Initial purchasing
+                    string placeOrder = Console.ReadLine();
+                    Console.Clear();
+
+                    if (listOfDrinks.Count == choice)
+                    {
+                        itemsPurchased.Add(listOfDrinks);
+                        //pricesPerItem.Add(result);
+                        Console.WriteLine($"Adding {placeOrder} to cart at "); /*{result}*/
+                        break;
+                    }
+                    else
+                    {
+                        Console.WriteLine($"Sorry, we don't have {placeOrder}. Please try again.");
+                    }
+
+                } while (true);
+
+                // Check if they want to buy again
+                Console.WriteLine("Would you like to order anything else (y/n)?");
+                while (true)
+                {
+                    string loopChoice = Console.ReadLine();
+                    if (loopChoice == "y")
+                    {
+                        break;
+                    }
+                    else if (loopChoice == "n")
+                    {
+                        runApplication = false;
+                        break;
+                    }
+                    else
+                    {
+                        Console.WriteLine("that was not a valid choice");
+                    }
+                }
+            }
+            return itemsPurchased;
+        }
+
+
+        static void PaymentSelection(/*It's possible we will have to pass a parameter here*/)
+        {
+            PaymentDetails pd = new PaymentDetails();
+            Console.WriteLine("Choose a payment method: \n1. for cash\n2. for credit card\n3. for checks");
             while (true)
             {
-                Console.WriteLine("Your name:");
-                usersName = Console.ReadLine();
-                if (ValidateUserInput.StringIsNumeric(usersName))
+                string paymentMethodChosen = Console.ReadLine();
+                if (paymentMethodChosen == "1")
                 {
-                    Console.WriteLine("Name field cannot be empty.");
+                    Console.WriteLine("Give up the Moola!");
+                    decimal userGiveMoney = decimal.Parse(Console.ReadLine());
+                    decimal GrandTotal = 10;
+                    if (userGiveMoney >= GrandTotal)
+                    {
+                        Console.WriteLine($"Cash Tender: \t${userGiveMoney}");
+                        decimal changesToGiveBack = GrandTotal - userGiveMoney;
+                        Console.WriteLine($"Change due: \t${-changesToGiveBack}");
+                    }
+                    break;
+                }
+                else if (paymentMethodChosen == "2")
+                {
+                    decimal itemprice = 10; // the value coming into itemprice needs to come from the total price of item already purchased
+                    PaymentType pt = TakingCCPayments(itemprice);
+                    pd.TakingPayment(pt);
+                    break;
+                }
+                else if (paymentMethodChosen == "3")
+                {
+                    decimal itemprice = 10; // the value coming into itemprice needs to come from the total price of item already purchased
+                    PaymentType pt = TakingCheckPayments(itemprice);
+                    pd.TakingPayment(pt);
+                    break;
                 }
                 else
                 {
-                    break;
+                    Console.Clear();
+                    Console.WriteLine("Invalid entry. Choose a payment method: \n1. for cash\n2. for credit card\n3. for checks");
                 }
             }
 
-            Cash userChoseCash = new Cash(usersName, itemPrice);
-            return userChoseCash;
+            Console.WriteLine("Thank you for your service");
         }
-
         static PaymentType TakingCCPayments(decimal itemPrice)
         {
             string usersName;
             while (true)
             {
-                Console.WriteLine("Your name:");
+                Console.WriteLine("Your name on the card:");
                 usersName = Console.ReadLine();
-                if (usersName == "")
+                if (ValidateUserInput.StringNotEmpty(usersName) != true)
                 {
                     Console.WriteLine("Name field cannot be empty.");
+                }
+                else if (ValidateUserInput.StringIsNumeric(usersName) == true)
+                {
+                    Console.WriteLine("Invalid entry. Please enter your name");
                 }
                 else
                 {
                     break;
                 }
             }
-            
+
             string creditCardNumber;
             while (true)
             {
@@ -104,12 +191,16 @@ namespace CoffeeAndTea
                 {
                     Console.WriteLine("Credit Card Number field cannot be empty.");
                 }
+                else if (ValidateUserInput.StringIsNumeric(creditCardNumber) == false)
+                {
+                    Console.WriteLine("Invalid entry. Please enter your name");
+                }
                 else
                 {
                     break;
                 }
             }
-            
+
             string expirationDate;
             while (true)
             {
@@ -124,7 +215,7 @@ namespace CoffeeAndTea
                     break;
                 }
             }
-            
+
             string securityCode;
             while (true)
             {
@@ -142,17 +233,20 @@ namespace CoffeeAndTea
             CreditCard userChoseCC = new CreditCard(usersName, creditCardNumber, expirationDate, securityCode, itemPrice);
             return userChoseCC;
         }
-
         static PaymentType TakingCheckPayments(decimal itemPrice)
         {
             string usersName;
             while (true)
             {
-                Console.WriteLine("Your name:");
+                Console.WriteLine("Name on the check:");
                 usersName = Console.ReadLine();
-                if (usersName == "")
+                if (ValidateUserInput.StringNotEmpty(usersName) != true)
                 {
                     Console.WriteLine("Name field cannot be empty.");
+                }
+                else if (ValidateUserInput.StringIsNumeric(usersName) == true)
+                {
+                    Console.WriteLine("Invalid entry. Please enter your name");
                 }
                 else
                 {
@@ -163,11 +257,15 @@ namespace CoffeeAndTea
             string checkNumber;
             while (true)
             {
-                Console.WriteLine("Your name:");
+                Console.WriteLine("Check Number:");
                 checkNumber = Console.ReadLine();
-                if (checkNumber == "")
+                if (ValidateUserInput.StringNotEmpty(checkNumber) != true)
                 {
                     Console.WriteLine("Name field cannot be empty.");
+                }
+                else if (ValidateUserInput.StringIsNumeric(checkNumber) == false)
+                {
+                    Console.WriteLine("Invalid entry. Please enter a check number");
                 }
                 else
                 {

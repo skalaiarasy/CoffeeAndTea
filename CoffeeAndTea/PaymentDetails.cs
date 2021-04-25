@@ -7,9 +7,7 @@ namespace CoffeeAndTea
     {
         private List<PaymentType> _paymentChoices = new List<PaymentType>
         {
-            new PaymentType("Cash", 12),
-            new CreditCard("credit card", "465456454654", "June-2025", "4455", 15.5m),
-            new Check("checks", "456456465", 15)
+            //Empty list of payment.
         };
 
         public List<PaymentType> PaymentTypes
@@ -33,7 +31,6 @@ namespace CoffeeAndTea
         public void TakingPayment(PaymentType paymentChoice)
         {
             this._paymentChoices.Add(paymentChoice);
-            Console.WriteLine("Look at that!");
             ReceiptPaymentDetails();
         }
     }
