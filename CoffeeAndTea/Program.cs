@@ -10,14 +10,14 @@ namespace CoffeeAndTea
         static void Main(string[] args)
         {
 
-            Console.WriteLine("WELCOME to our COFFEE/TEA Shop!");
-            decimal total = GetMenu();
-            Console.WriteLine($"Your bill: ${total}");
-            PaymentSelection(total);
+            //Console.WriteLine("WELCOME to our COFFEE/TEA Shop!");
+            //decimal total = GetMenu();
+            //Console.WriteLine($"Your bill: ${total}");
+            PaymentSelection(25); // working on the payment validation
             Console.ReadLine();
         }
 
-        static decimal GetMenu()
+        static decimal GetMenu() // Mock display to confirm the list is working
         {
             StreamReader reader = new StreamReader("StoreList.txt");
             List<Drinks> menu = new List<Drinks>();
@@ -136,13 +136,14 @@ namespace CoffeeAndTea
         static void PaymentSelection(decimal total)
         {
             PaymentDetails pd = new PaymentDetails();
-            Console.WriteLine("Choose a payment method: \n1. for cash\n2. for credit card\n3. for checks");
+            Console.WriteLine("How would you like to pay for your items?:");
             while (true)
             {
+                Console.WriteLine("1. for cash\n2. for credit card\n3. for checks");
                 string paymentMethodChosen = Console.ReadLine(); // This validation is working
                 if (paymentMethodChosen == "1")
                 {
-                    Console.WriteLine("Give up the Moola!");
+                    Console.WriteLine($"Remember your total is { total }");
                     decimal userGiveMoney = decimal.Parse(Console.ReadLine());
                     decimal GrandTotal = total;
                     if (userGiveMoney >= GrandTotal)
@@ -170,7 +171,7 @@ namespace CoffeeAndTea
                 else
                 {
                     Console.Clear();
-                    Console.WriteLine("Invalid entry. Choose a payment method: \n1. for cash\n2. for credit card\n3. for checks");
+                    Console.WriteLine("Invalid entry. Choose a payment method:");
                 }
             }
 
@@ -261,7 +262,7 @@ namespace CoffeeAndTea
                 }
                 else if (ValidateUserInput.StringIsNumeric(usersName) == true)
                 {
-                    Console.WriteLine("Invalid entry. Please enter your name");
+                    Console.WriteLine("Numbers are not allowed in the name filed. Please enter your name");
                 }
                 else
                 {
@@ -276,7 +277,7 @@ namespace CoffeeAndTea
                 checkNumber = Console.ReadLine();
                 if (ValidateUserInput.StringNotEmpty(checkNumber) != true)
                 {
-                    Console.WriteLine("Name field cannot be empty.");
+                    Console.WriteLine("Check Number field cannot be empty.");
                 }
                 else if (ValidateUserInput.StringIsNumeric(checkNumber) == false)
                 {
