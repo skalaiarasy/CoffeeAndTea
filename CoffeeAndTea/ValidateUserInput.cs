@@ -15,6 +15,7 @@ namespace CoffeeAndTea
                 return false;
             }
         }
+
         public static bool StringNotEmpty(string value)
         {
             if (value == "")
