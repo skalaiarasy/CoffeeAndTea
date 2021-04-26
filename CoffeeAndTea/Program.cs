@@ -9,13 +9,14 @@ namespace CoffeeAndTea
         static void Main(string[] args)
         {
             ShoppingCart cart = new ShoppingCart();
+            //List<Products> itemChoice = new List<Products>();
 
             Console.WriteLine("Welcome to Take a Sip!");
             Console.WriteLine();
 
             while (true)
             {
-                cart.DisplayHeader();
+                //cart.DisplayHeader();
                 cart.ListProducts();
                 Console.WriteLine();
                 Console.WriteLine("Which drink would you like to purchase?");
@@ -36,13 +37,39 @@ namespace CoffeeAndTea
                 {
                     cart.AddToCart(choice);
 
+                    Console.WriteLine("Would you like to add more drinks to your cart? y/n");
+                    string input;
+                    while (true)
+                    {
+                        input = Console.ReadLine().ToLower().Trim();
+                        if (input == "y")
+                        {
+
+                          
+                            break;
+
+                        }
+                        else if (input == "n")
+                        {
+                            cart.Checkout();
+                           
+                            //Display receipt
+
+                        }
+                        else
+                        {
+                            Console.WriteLine("That was not a y/n. Please try again.");
+                        }
+                    }
+
                 }
-                else if (choice <= 0 && choice > cart.Product.Count)
+                else if (choice <= 0 || choice >= 13 )
                 {
                     Console.WriteLine("That was not an option. Please select a valid number.");
-                }
+                    Console.WriteLine();
+                } 
+                
             }
-            //Call for checkout
         }
 
     }
