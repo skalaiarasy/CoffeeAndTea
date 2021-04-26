@@ -6,12 +6,12 @@ using System.Threading.Tasks;
 
 namespace CoffeeAndTea
 {
-    class Drinks
+    class Products
     {
         private string _category;
         private string _name;
+        private string _description;
         private decimal _price;
-        private string _type;
 
         public string Category
         {
@@ -25,6 +25,11 @@ namespace CoffeeAndTea
             set { this._name = value; }
         }
 
+        public string Description
+        {
+            get { return this._description; }
+            set { this._description = value; }
+        }
 
         public decimal Price
         {
@@ -32,26 +37,28 @@ namespace CoffeeAndTea
             set { this._price = value; }
         }
 
-        public string Type
-        {
-            get { return this._type; }
-            set { this._type = value; }
-        }
-
-        public Drinks(string category, string name, decimal price, string type)
+        public Products(string category, string name, string description, decimal price)
         {
             this._category = category;
             this._name = name;
+            this._description = description;
             this._price = price;
-            this._type = type;
+        }
+
+        public Products()
+        {
+            this._category = "";
+            this._name = "";
+            this._description = "";
+            this._price = 0;
         }
 
         public override string ToString()
         {
 
-            return $"Category:{this._category}Name:{this._name} Price: {this._price} Type: {this._type}";
-        }
+            return $"{this._category} {this._name} {this._description} ${this._price}";
 
+        }
 
     }
 }
