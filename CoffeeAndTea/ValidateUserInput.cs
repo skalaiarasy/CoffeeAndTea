@@ -50,5 +50,36 @@ namespace CoffeeAndTea
             }
             return output;
         }
+
+        public static bool GetUserValues(int userInput)
+        {
+            bool output = true;
+            while (true)
+            {
+                try
+                {
+                    userInput = int.Parse(Console.ReadLine());
+                    if (userInput < 0 || userInput > 12)
+                    {
+                        return false;
+                        throw new Exception("Please enter a value between as displayed in the list");
+                    }
+                    else
+                    {
+                        Console.Clear();
+                        break;
+                    }
+                }
+                catch (FormatException)
+                {
+                    Console.Write("Value entered is not a number. \nPlease try again: ");
+                }
+                catch (Exception error)
+                {
+                    Console.Write(error.Message);
+                }
+            }
+            return output;
+        }
     }
 }

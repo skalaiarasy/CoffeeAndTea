@@ -9,12 +9,15 @@ namespace CoffeeAndTea
     {
         static void Main(string[] args)
         {
-            GetMenu();
-            PaymentSelection();
+
+            Console.WriteLine("WELCOME to our COFFEE/TEA Shop!");
+            decimal total = GetMenu();
+            Console.WriteLine($"Your bill: ${total}");
+            PaymentSelection(total);
             Console.ReadLine();
         }
 
-        static void GetMenu()
+        static decimal GetMenu()
         {
             StreamReader reader = new StreamReader("StoreList.txt");
             List<Drinks> menu = new List<Drinks>();
@@ -35,41 +38,50 @@ namespace CoffeeAndTea
                     string type = splitLine[3];
 
                     Drinks drinkDetails = new Drinks(category, name, price, type);
-
-                    //Console.WriteLine(drinkDetails.ToString());
                     menu.Add(drinkDetails);
                 }
             }
-            // This will display all items to the screen
+
             reader.Close();
-            Console.WriteLine("WELCOME to our COFFEE and TEA Shop!");
+
+            //This foreach display the menu
             int counter = 0;
+            Console.WriteLine(string.Format("\t{0, -15} {1, -16} {2, -16} {3, -16}", "Category", "Name", "Price", "Description"));
             foreach (Drinks drinkDetails in menu)
             {
                 counter++;
                 Console.WriteLine($"{counter}. {drinkDetails}");
             }
 
-            List<string> itemOrdered = new List<string>();
-            List<string> itemPriced = new List<string>();
-            string itemName, itemPrice;
+            List<string> itemOrderedList = new List<string>();
+            List<decimal> listOfItemPriced = new List<decimal>();
+            List<int> itemQtyList = new List<int>();
+            int userQty = 0;
 
-            Console.WriteLine("We are taking your order. Which item do you want?");
+            Console.WriteLine("Which drink would you like to purcahse:? Choose a number:");
             while (true)
             {
-                string userinput = Console.ReadLine().ToLower();
-                foreach (Drinks oneDrink in menu)
+                int userinput = int.Parse(Console.ReadLine());
+                
+                int counter2 = 0;
+                //this foreach grab an item per user selection
+                foreach (Drinks userChoice in menu)
                 {
-                    if (oneDrink.Name.ToLower() == userinput)
-                    {
-                        string[] splittingRow = oneDrink.ToString().Split(",");
-                        itemName = splittingRow[1];
-                        itemPrice = splittingRow[2];
-                        Console.WriteLine($"{ itemName }: { itemPrice }");
 
-                        //Items name and price are being stored here to receipted
-                        itemOrdered.Add(itemName);
-                        itemPriced.Add(itemPrice);
+                    counter2++;
+                    if (counter2 == userinput)
+                    {
+                        Console.WriteLine($"{ userChoice.Name} \t{ userChoice.Price }");
+
+                        Console.WriteLine($"How many of { userChoice.Name } would you like?");
+                        userQty = int.Parse(Console.ReadLine());
+
+                        Console.WriteLine($"{userQty} * { userChoice.Name} \t{ userChoice.Price * userQty }");
+
+                        //userChoice.Price *= userQty;
+                        itemQtyList.Add(userQty);
+                        itemOrderedList.Add(userChoice.Name);
+                        listOfItemPriced.Add(userChoice.Price);
                     }
                 }
 
@@ -103,33 +115,36 @@ namespace CoffeeAndTea
             Console.Clear();
             Console.WriteLine("Thank you for your order");
             Console.WriteLine("These are your items:");
-            for (int i = 0; i < itemOrdered.Count; i++)
+            for (int i = 0; i < itemOrderedList.Count; i++)
             {
-                Console.WriteLine($"{itemOrdered[i] } \t{itemPriced[i]}");
+                Console.WriteLine($"{itemQtyList[i]} {itemOrderedList[i] } \t{listOfItemPriced[i]}");
             }
+            Console.WriteLine($"You bought: \t{userQty + itemOrderedList.Count } items.");
 
-            double Total = 0;
-            double convertThePrice = Convert.ToDouble(itemPriced);
-            foreach (double value in convertThePrice.ToString())//add all values into averagePrice
+            PaymentDetails salestax = new PaymentDetails();
+            decimal Total = 0, grandTotal;
+            foreach (decimal value in listOfItemPriced)//add all values into averagePrice
             {
                 Total += value;
             }
-            //get average using averagePrice and list.Count
-            Total = Math.Round(Total, 2);
-            Console.WriteLine($"Your bill: ${Total}");
+            Console.WriteLine($"Total before tax: \t{Total}");
+            Console.WriteLine($"Sales Tax: \t{ salestax.SalesTaxTendered() *100 }%");
+
+            grandTotal = Math.Round(Total + (Total * salestax.SalesTaxTendered()), 2);
+            return grandTotal;
         }
-        static void PaymentSelection(/*It's possible we will have to pass a parameter here*/)
+        static void PaymentSelection(decimal total)
         {
             PaymentDetails pd = new PaymentDetails();
             Console.WriteLine("Choose a payment method: \n1. for cash\n2. for credit card\n3. for checks");
             while (true)
             {
-                string paymentMethodChosen = Console.ReadLine();
+                string paymentMethodChosen = Console.ReadLine(); // This validation is working
                 if (paymentMethodChosen == "1")
                 {
                     Console.WriteLine("Give up the Moola!");
                     decimal userGiveMoney = decimal.Parse(Console.ReadLine());
-                    decimal GrandTotal = 10;
+                    decimal GrandTotal = total;
                     if (userGiveMoney >= GrandTotal)
                     {
                         Console.WriteLine($"Cash Tender: \t${userGiveMoney}");

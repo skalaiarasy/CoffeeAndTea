@@ -53,7 +53,8 @@ namespace CoffeeAndTea
 
         public override string ToString()
         {
-            return $"Category: {this._category}, Name:{this._name}, Price: {this._price}, Type: {this._type}";
+            string formatDrinkList = string.Format("\t{0, -15} {1, -16} ${2, -16} {3, -10}", this._category, this._name, this._price, this._type);
+            return formatDrinkList;
         }
     }
 }

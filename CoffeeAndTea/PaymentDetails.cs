@@ -5,10 +5,11 @@ namespace CoffeeAndTea
 {
     class PaymentDetails
     {
-        private List<PaymentType> _paymentChoices = new List<PaymentType>
-        {
-            //Empty list of payment.
-        };
+        private List<PaymentType> _paymentChoices = new List<PaymentType>();
+        //{
+        //    //Empty list of payment.
+        //};
+        private decimal _salesTax = 0.07m;
 
         public List<PaymentType> PaymentTypes
         {
@@ -32,6 +33,12 @@ namespace CoffeeAndTea
         {
             this._paymentChoices.Add(paymentChoice);
             ReceiptPaymentDetails();
+        }
+
+        public decimal SalesTaxTendered()
+        {
+            decimal totalTaxed = Math.Round(this._salesTax, 2);//get tax
+            return totalTaxed;
         }
     }
 }
