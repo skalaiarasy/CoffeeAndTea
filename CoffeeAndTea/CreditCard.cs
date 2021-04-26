@@ -18,14 +18,14 @@
             set { this._expirationDate = value; }        }
 
 
-        private string CardNumber
+        public string CardNumber
         {
             get { return this._cardNumber; }
             set { this._cardNumber = value; }
         }
 
         //No default valud construction since card number would be req if user accept to pay with cards
-        public CreditCard(string cardNumber, string expirationDate, string securityCode, string name, decimal payment) : base (name, payment)
+        public CreditCard(string name, string cardNumber, string expirationDate, string securityCode, decimal payment) : base (name, payment)
         {
             this._cardNumber = cardNumber;
             this._expirationDate = expirationDate;
@@ -35,8 +35,9 @@
         //It's possible we don't need to return the base value for payment
         public override string ToString()
         {
-            string result = base.ToString(); 
-            return $"{ result } "; // somehow, here we ned to return only the last four digit of the card number when printing the receipt.
+            string result = base.ToString();
+            return $"{this.GetType().Name.Substring(0,6)} Total Payment { result }\nLast four digits: {this._cardNumber} "; 
+            // somehow, here we ned to return only the last four digit of the card number when printing the receipt.
         }
 
     }
