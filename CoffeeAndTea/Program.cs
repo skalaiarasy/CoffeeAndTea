@@ -10,10 +10,10 @@ namespace CoffeeAndTea
         static void Main(string[] args)
         {
 
-            //Console.WriteLine("WELCOME to our COFFEE/TEA Shop!");
-            //decimal total = GetMenu();
-            //Console.WriteLine($"Your bill: ${total}");
-            PaymentSelection(25); // working on the payment validation
+            Console.WriteLine("WELCOME to our COFFEE/TEA Shop!");
+           decimal total = GetMenu();
+            Console.WriteLine($"Your bill: ${total}");
+            //PaymentSelection(25); // working on the payment validation
             Console.ReadLine();
         }
 
@@ -41,9 +41,7 @@ namespace CoffeeAndTea
                     menu.Add(drinkDetails);
                 }
             }
-
             reader.Close();
-
             //This foreach display the menu
             int counter = 0;
             Console.WriteLine(string.Format("\t{0, -15} {1, -16} {2, -16} {3, -16}", "Category", "Name", "Price", "Description"));
@@ -133,7 +131,7 @@ namespace CoffeeAndTea
             grandTotal = Math.Round(Total + (Total * salestax.SalesTaxTendered()), 2);
             return grandTotal;
         }
-        static void PaymentSelection(decimal total)
+        static void PaymentSelection(decimal totalFromReceipt)
         {
             PaymentDetails pd = new PaymentDetails();
             Console.WriteLine("How would you like to pay for your items?:");
@@ -143,28 +141,39 @@ namespace CoffeeAndTea
                 string paymentMethodChosen = Console.ReadLine(); // This validation is working
                 if (paymentMethodChosen == "1")
                 {
-                    Console.WriteLine($"Remember your total is { total }");
-                    decimal userGiveMoney = decimal.Parse(Console.ReadLine());
-                    decimal GrandTotal = total;
-                    if (userGiveMoney >= GrandTotal)
+                    Console.WriteLine($"Remember your total is { totalFromReceipt }");
+
+                    while (true)
                     {
-                        Console.WriteLine($"Cash Tender: \t${userGiveMoney}");
-                        decimal changesToGiveBack = GrandTotal - userGiveMoney;
-                        Console.WriteLine($"Change due: \t${-changesToGiveBack}");
+                        string cashFromUserStr = Console.ReadLine();
+
+                        if (ValidateUserInput.StringIsNumeric(cashFromUserStr) && cashFromUserStr != "" && decimal.Parse(cashFromUserStr) >= totalFromReceipt)
+                        {
+                            decimal cashFromUserDec = decimal.Parse(cashFromUserStr);
+                            Console.Clear();
+                            // I will need the the total receipt again
+                            Console.WriteLine($"Cash Tender: \t${cashFromUserDec}");
+                            decimal changesToGiveBack = totalFromReceipt - cashFromUserDec;
+                            Console.WriteLine($"Change due: \t${-changesToGiveBack}");
+                            continue;
+                        }
+                        else
+                        {
+                            Console.WriteLine($"Invalid entry! Enter cash greater than { totalFromReceipt }");
+                        } 
                     }
-                    break;
+                    
                 }
                 else if (paymentMethodChosen == "2")
                 {
-                    decimal itemprice = 10; // the value coming into itemprice needs to come from the total price of item already purchased
-                    PaymentType pt = TakingCCPayments(itemprice);
+                    //decimal itemprice = totalFromReceipt; 
+                    PaymentType pt = TakingCCPayments(totalFromReceipt);// the value coming into itemprice needs to come from the total price of item already purchased
                     pd.TakingPayment(pt);
                     break;
                 }
                 else if (paymentMethodChosen == "3")
-                {
-                    decimal itemprice = 10; // the value coming into itemprice needs to come from the total price of item already purchased
-                    PaymentType pt = TakingCheckPayments(itemprice);
+                {                    
+                    PaymentType pt = TakingCheckPayments(totalFromReceipt);
                     pd.TakingPayment(pt);
                     break;
                 }
