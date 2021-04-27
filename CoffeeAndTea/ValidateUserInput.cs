@@ -82,5 +82,32 @@ namespace CoffeeAndTea
             }
             return output;
         }
+
+        public static int UserSelection()
+        {
+            int x;
+            while (true)
+            {
+                try
+                {
+                    // This should loop our list from 1 -12
+                    x = int.Parse(Console.ReadLine());
+                    if (x <= 0 || x >=13)
+                    {
+                        Console.WriteLine("Invalid entry. Choose a number between 1-12 from our menu");
+                    }
+                    else
+                    {
+                        break; // break to return below
+                    }
+                }
+                catch (Exception) // This will catch format issues.
+                {
+                    Console.WriteLine("That was not a number. Choose between 1-12 from our menu");
+                }
+            }
+            return x;
+        }
+
     }
 }
