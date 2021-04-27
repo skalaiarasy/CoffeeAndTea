@@ -54,13 +54,12 @@ namespace CoffeeAndTea
             List<string> itemOrderedList = new List<string>();
             List<decimal> listOfItemPriced = new List<decimal>();
             List<int> itemQtyList = new List<int>();
-
-            int userQty = 0;
+            int userQty;
 
             Console.WriteLine("Which drink would you like to purcahse:? Choose a number:");
             while (true)
             {
-                int userinput = int.Parse(Console.ReadLine()); //?
+                int userinput = ValidateUserInput.UserSelection(); //?
 
                 int counter2 = 0;
                 //this foreach grab an item per user selection
@@ -114,22 +113,28 @@ namespace CoffeeAndTea
             Console.Clear();
             Console.WriteLine("Thank you for your order");
             Console.WriteLine("These are your items:");
+
+            List<decimal> totalPriced = new List<decimal>(); // We added another list to confirm make sure price per item is displayed
+            decimal tempPrice;
             for (int i = 0; i < itemOrderedList.Count; i++)
             {
+                tempPrice = listOfItemPriced[i] * itemQtyList[i];
+                totalPriced.Add(tempPrice);
+                
                 Console.WriteLine($"{itemQtyList[i]} {itemOrderedList[i] } \t${listOfItemPriced[i] * itemQtyList[i]}");
             }
-            Console.WriteLine($"You bought: \t{itemQtyList.Count * userQty } items"); // there a bug here
+            Console.WriteLine($"You bought: \t{ totalPriced.Count } items"); // there a bug here
 
             PaymentDetails salestax = new PaymentDetails();
             decimal Total = 0, grandTotal;
 
-            foreach (decimal value in listOfItemPriced)//add all values into averagePrice
+            foreach (decimal value in totalPriced)//add all values into averagePrice
             {
                 Total += value;
             }
-            Total *= userQty;
-            Console.WriteLine($"Total before tax: \t{Total}");
-            Console.WriteLine($"Sales Tax: \t{ salestax.SalesTaxTendered()* 100}%");
+            //Total *= listOfItemPriced.Count;
+            Console.WriteLine($"\nTotal before tax: \t{Total}");
+            Console.WriteLine($"Local sales tax: \t{ salestax.SalesTaxTendered() * 100}%");
 
             grandTotal = Math.Round(Total + (Total * salestax.SalesTaxTendered()), 2);
             return grandTotal;

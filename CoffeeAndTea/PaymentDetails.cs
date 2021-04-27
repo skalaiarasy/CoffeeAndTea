@@ -9,7 +9,7 @@ namespace CoffeeAndTea
         //{
         //    //Empty list of payment.
         //};
-        private decimal _salesTax = 1.06m;
+        private decimal _salesTax = 0.06m;
 
         public List<PaymentType> PaymentTypes
         {
