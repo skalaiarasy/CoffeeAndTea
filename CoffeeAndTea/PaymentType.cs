@@ -30,7 +30,7 @@
 
         public override string ToString()
         {
-            return $"{ this._payment }";
+            return $"${ this._payment }";
         }
     }
 

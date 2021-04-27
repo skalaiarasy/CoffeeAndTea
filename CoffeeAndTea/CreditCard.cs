@@ -1,4 +1,5 @@
-﻿namespace CoffeeAndTea
+﻿using System;
+namespace CoffeeAndTea
 {
     class CreditCard : PaymentType
     {
@@ -38,7 +39,7 @@
         {
             //string ccNum = this._cardNumber.Substring(12, 16);
             string result = base.ToString();
-            return $"{this.GetType().Name.Substring(0,6)} Total Payment { result }\nLast four digits: {this._cardNumber} "; 
+            return $"{this.GetType().Name.Substring(0,6)} Card Total Payment: { result }\n";
             // somehow, here we ned to return only the last four digit of the card number when printing the receipt.
         }
 

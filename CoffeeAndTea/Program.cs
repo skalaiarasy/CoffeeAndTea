@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Text;
+using System.Text.RegularExpressions;
 
 namespace CoffeeAndTea
 {
@@ -10,8 +11,9 @@ namespace CoffeeAndTea
         static void Main(string[] args)
         {
 
-            Console.WriteLine("WELCOME to our COFFEE/TEA Shop!");
+            Console.WriteLine("Welcome to our Coffee/Tea Shop!");
             Console.WriteLine();
+
             decimal GrandTotal = GetMenu();
             Console.WriteLine($"Grand Total: \t${GrandTotal}");
             Console.WriteLine();
@@ -20,8 +22,9 @@ namespace CoffeeAndTea
             Console.ReadLine();
         }
 
-        static decimal GetMenu() // Mock display to confirm the list is working
+        static List<Drinks> CreateMenu()
         {
+            
             StreamReader reader = new StreamReader("StoreList.txt");
             List<Drinks> menu = new List<Drinks>();
 
@@ -45,9 +48,15 @@ namespace CoffeeAndTea
                 }
             }
             reader.Close();
+            return menu;
+        }
+        static decimal GetMenu() // Mock display to confirm the list is working
+        {
+            List<Drinks> menu = CreateMenu();
             //This foreach display the menu
             int counter = 0;
-            Console.WriteLine(string.Format("\t{0, -15} {1, -16} {2, -16} {3, -16}", "Category", "Name", "Price", "Description"));
+            Console.WriteLine(string.Format("\t{0, -15} {1, -16} {2, -16} {3, -15}", "Category", "Name", "Price", "Description"));
+            Console.WriteLine();
             foreach (Drinks drinkDetails in menu)
             {
                 counter++;
@@ -61,10 +70,10 @@ namespace CoffeeAndTea
             int userQty;
 
             Console.WriteLine();
-            Console.WriteLine("Which drink would you like to purcahse:? Choose a number:");
+            Console.WriteLine("Which drink would you like to purchase:? Choose a number:");
             while (true)
             {
-                int userinput = ValidateUserInput.UserSelection(); //?
+                int userinput = ValidateUserInput.UserSelection();
 
                 int counter2 = 0;
                 //this foreach grab an item per user selection
@@ -90,13 +99,13 @@ namespace CoffeeAndTea
 
                 bool addItems = true;
                 Console.WriteLine();
-                Console.WriteLine("Would you like to add more items? y/n");
+                Console.WriteLine("Would you like to add more drinks? y/n");
                 while (true)
                 {
                     string addCheck = Console.ReadLine().ToLower().Trim();
                     if (addCheck == "y")
                     {
-                        Console.WriteLine("What addtional items do you want?");
+                        Console.WriteLine("What addtional drinks do you want?");
                         break;
                     }
                     else if (addCheck == "n")
@@ -119,7 +128,7 @@ namespace CoffeeAndTea
             Console.Clear();
             Console.WriteLine("Thank you for your order!");
             Console.WriteLine();
-            Console.WriteLine("These are your items:");
+            Console.WriteLine("These are your drinks:");
             Console.WriteLine();
 
             List<decimal> totalPriced = new List<decimal>(); // We added another list to confirm make sure price per item is displayed
@@ -130,11 +139,11 @@ namespace CoffeeAndTea
                 totalQty += itemQtyList[i];
                 tempPrice = listOfItemPriced[i] * itemQtyList[i];
                 totalPriced.Add(tempPrice);
-                
+
                 Console.WriteLine($"{itemQtyList[i]} {itemOrderedList[i] } \t${listOfItemPriced[i] * itemQtyList[i]}");
             }
             Console.WriteLine();
-            Console.WriteLine($"You purchased: \t{ totalQty } items"); // there a bug here
+            Console.WriteLine($"You purchased: \t{ totalQty } drinks"); // there a bug here
 
             PaymentDetails salestax = new PaymentDetails();
             decimal Total = 0, grandTotal;
@@ -153,14 +162,17 @@ namespace CoffeeAndTea
         static void PaymentSelection(decimal totalFromReceipt)
         {
             PaymentDetails pd = new PaymentDetails();
-            Console.WriteLine("How would you like to pay for your items?:");
+            Console.WriteLine("How would you like to pay for your drinks?:");
+            Console.WriteLine();
             while (true)
             {
-                Console.WriteLine("1. for cash\n2. for credit card\n3. for checks");
+                Console.WriteLine("1. Cash\n2. Credit Card\n3. Checks");
                 string paymentMethodChosen = Console.ReadLine(); // This validation is working
                 if (paymentMethodChosen == "1")
                 {
-                    Console.WriteLine($"Remember your total is { totalFromReceipt }");
+                    Console.WriteLine();
+                    Console.WriteLine("How much cash are you paying with?");
+                    Console.WriteLine($"Your total is ${ totalFromReceipt }");
 
                     while (true)
                     {
@@ -171,9 +183,13 @@ namespace CoffeeAndTea
                             decimal cashFromUserDec = decimal.Parse(cashFromUserStr);
                             Console.WriteLine();
                             // I will need the the total receipt again
+                            Console.WriteLine("==========================");
+                            Console.WriteLine();
                             Console.WriteLine($"Cash Tender: \t${ cashFromUserDec }");
+                            
                             decimal changesToGiveBack = totalFromReceipt - cashFromUserDec;
-                            Console.WriteLine($"Change due: \t${-changesToGiveBack}");
+                            Console.WriteLine($"Change Due: \t${-changesToGiveBack}");
+                            Console.WriteLine();
                             break;
                         }
                         else
@@ -185,7 +201,6 @@ namespace CoffeeAndTea
                 }
                 else if (paymentMethodChosen == "2")
                 {
-                    //decimal itemprice = totalFromReceipt; 
                     PaymentType pt = TakingCCPayments(totalFromReceipt);// the value coming into itemprice needs to come from the total price of item already purchased
                     pd.TakingPayment(pt);
                     break;
@@ -203,37 +218,34 @@ namespace CoffeeAndTea
                 }
             }
 
-            Console.WriteLine("Thank you for your service. \nSee your receipt for your purchases");
+            Console.WriteLine("Thank you for your shopping at Coffee/Tea! \nHave a nice day!");
+            Console.WriteLine();
+
+            List<Drinks> menu = CreateMenu();
+            DisplayMenu(menu);
+
         }
         static PaymentType TakingCCPayments(decimal itemPrice)
         {
             string usersName;
-            while (true)
-            {
-                Console.WriteLine("Your name on the card:");
-                usersName = Console.ReadLine();
-                if (ValidateUserInput.StringNotEmpty(usersName) != true)
-                {
-                    Console.WriteLine("Name field cannot be empty.");
-                }
-                else if (ValidateUserInput.StringIsNumeric(usersName) == true)
-                {
-                    Console.WriteLine("Invalid entry. Please enter your name");
-                }
-                else
-                {
-                    break;
-                }
-            }
+            Console.WriteLine("Name on the card:");
+            usersName = ValidateUserInput.ValidateUserName();
 
             string creditCardNumber;
             while (true)
             {
+                Console.WriteLine();
                 Console.WriteLine("Credit Card Number:");
+                
+                Console.WriteLine("16 digits, no spaces");
                 creditCardNumber = Console.ReadLine();
-                if (creditCardNumber == "")
+                if (Regex.IsMatch(creditCardNumber, @"^[0-9]{16}"))
                 {
-                    Console.WriteLine("Credit Card Number field cannot be empty.");
+                    break;
+                }
+                else if (creditCardNumber == "")
+                {
+                    Console.WriteLine("Credit Card number field cannot be empty.");
                 }
                 else if (ValidateUserInput.StringIsNumeric(creditCardNumber) == false)
                 {
@@ -241,37 +253,50 @@ namespace CoffeeAndTea
                 }
                 else
                 {
-                    break;
+                    Console.WriteLine("That was not a 16 digit number");
                 }
             }
 
             string expirationDate;
             while (true)
             {
+                Console.WriteLine();
                 Console.WriteLine("Expiration date:");
+                Console.WriteLine("MM/YYYY");
                 expirationDate = Console.ReadLine();
                 if (expirationDate == "")
                 {
-                    Console.WriteLine("Expiration Date field cannot be empty.");
+                    Console.WriteLine("Expiration date field cannot be empty.");
+                }
+                else if (Regex.IsMatch(expirationDate, @"(0[1-9]|10|11|12)/20[0-9]{2}$"))
+                {
+                    break;
                 }
                 else
                 {
-                    break;
+                    Console.WriteLine("That was an invalid expiration date");
                 }
             }
 
             string securityCode;
             while (true)
             {
+                Console.WriteLine();
                 Console.WriteLine("Security Code:");
+                Console.WriteLine("4 numbers");
                 securityCode = Console.ReadLine();
+                Console.WriteLine();
                 if (securityCode == "")
                 {
                     Console.WriteLine("Security code field cannot be empty.");
                 }
-                else
+                else if (Regex.IsMatch(securityCode, @"^[0-9]{4}"))
                 {
                     break;
+                }
+                else
+                {
+                    Console.WriteLine("That was an invalid security code"); ;
                 }
             }
             CreditCard userChoseCC = new CreditCard(usersName, creditCardNumber, expirationDate, securityCode, itemPrice);
@@ -303,6 +328,10 @@ namespace CoffeeAndTea
             {
                 Console.WriteLine("Check Number:");
                 checkNumber = Console.ReadLine();
+                if (Regex.IsMatch(checkNumber, @"^[0-9]{3,4}"))
+                {
+                    break;
+                }
                 if (ValidateUserInput.StringNotEmpty(checkNumber) != true)
                 {
                     Console.WriteLine("Check Number field cannot be empty.");
@@ -313,12 +342,20 @@ namespace CoffeeAndTea
                 }
                 else
                 {
-                    break;
+                    Console.WriteLine("That was an invalid check number");
                 }
             }
 
             Check userChoseCheck = new Check(usersName, checkNumber, itemPrice);
             return userChoseCheck;
+        }
+        static void DisplayMenu(List<Drinks> menu)
+        {
+            
+            foreach (Drinks drinks in menu)
+            {
+                Console.WriteLine($"{ drinks.ToString() }");
+            }
         }
     }
 }

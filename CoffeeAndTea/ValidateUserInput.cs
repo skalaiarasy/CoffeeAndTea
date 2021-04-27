@@ -92,7 +92,7 @@ namespace CoffeeAndTea
                 {
                     // This should loop our list from 1 -12
                     x = int.Parse(Console.ReadLine());
-                    if (x <= 0 || x >=13)
+                    if (x <= 0 || x >= 13)
                     {
                         Console.WriteLine("Invalid entry. Choose a number between 1-12 from our menu");
                     }
@@ -107,6 +107,39 @@ namespace CoffeeAndTea
                 }
             }
             return x;
+        }
+
+        public static string ValidateUserName()
+        {
+            string str;
+            while (true)
+            {
+                try
+                {
+                    str = Console.ReadLine();
+                    if (StringIsNumeric(str) == true)
+                    {
+                        Console.WriteLine("Invalid entry. Please enter your name");
+                    }
+                    else if (str == "")
+                    {
+                        Console.WriteLine("Name field cannot be empty.");
+                    }
+                    else if (str.Contains("*/-+~!@#$%^&*()_+="))
+                    {
+                        Console.WriteLine("Name field cannot be empty.");
+                    }
+                    else
+                    {
+                        break;
+                    }
+                }
+                catch (Exception e) // This will catch format issues.
+                {
+                    Console.WriteLine("Invalid entry. Please enter your name");
+                }
+            }
+            return str;
         }
 
     }
