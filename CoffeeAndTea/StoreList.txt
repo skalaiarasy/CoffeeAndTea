@@ -1,4 +1,4 @@
-Coffee,decaf,1.00,Normal
+Coffee,Decaf,1.00,Normal
 Coffee,Latte,2.50,Nice and smooth
 Coffee,Cappucino,3.00, Light and airy
 Coffee,Espresso,5.50, On the go
