@@ -9,9 +9,13 @@ namespace CoffeeAndTea
     {
         static void Main(string[] args)
         {
+
             Console.WriteLine("WELCOME to our COFFEE/TEA Shop!");
+            Console.WriteLine();
             decimal GrandTotal = GetMenu();
-            Console.WriteLine($"Your bill: ${GrandTotal}");
+            Console.WriteLine($"Grand Total: \t${GrandTotal}");
+            Console.WriteLine();
+
             PaymentSelection(GrandTotal);
             Console.ReadLine();
         }
@@ -56,6 +60,7 @@ namespace CoffeeAndTea
             List<int> itemQtyList = new List<int>();
             int userQty;
 
+            Console.WriteLine();
             Console.WriteLine("Which drink would you like to purcahse:? Choose a number:");
             while (true)
             {
@@ -70,7 +75,7 @@ namespace CoffeeAndTea
                     if (counter2 == userinput)
                     {
                         Console.WriteLine($"{ userChoice.Name} \t${ userChoice.Price }");
-
+                        Console.WriteLine();
                         Console.WriteLine($"How many { userChoice.Name } would you like?");
                         userQty = int.Parse(Console.ReadLine());
 
@@ -84,6 +89,7 @@ namespace CoffeeAndTea
                 }
 
                 bool addItems = true;
+                Console.WriteLine();
                 Console.WriteLine("Would you like to add more items? y/n");
                 while (true)
                 {
@@ -111,19 +117,24 @@ namespace CoffeeAndTea
             }
 
             Console.Clear();
-            Console.WriteLine("Thank you for your order");
+            Console.WriteLine("Thank you for your order!");
+            Console.WriteLine();
             Console.WriteLine("These are your items:");
+            Console.WriteLine();
 
             List<decimal> totalPriced = new List<decimal>(); // We added another list to confirm make sure price per item is displayed
             decimal tempPrice;
+            decimal totalQty = 0;
             for (int i = 0; i < itemOrderedList.Count; i++)
             {
+                totalQty += itemQtyList[i];
                 tempPrice = listOfItemPriced[i] * itemQtyList[i];
                 totalPriced.Add(tempPrice);
                 
                 Console.WriteLine($"{itemQtyList[i]} {itemOrderedList[i] } \t${listOfItemPriced[i] * itemQtyList[i]}");
             }
-            Console.WriteLine($"You bought: \t{ totalPriced.Count } items"); // there a bug here
+            Console.WriteLine();
+            Console.WriteLine($"You purchased: \t{ totalQty } items"); // there a bug here
 
             PaymentDetails salestax = new PaymentDetails();
             decimal Total = 0, grandTotal;
@@ -133,8 +144,8 @@ namespace CoffeeAndTea
                 Total += value;
             }
             //Total *= listOfItemPriced.Count;
-            Console.WriteLine($"\nTotal before tax: \t{Total}");
-            Console.WriteLine($"Local sales tax: \t{ salestax.SalesTaxTendered() * 100}%");
+            Console.WriteLine($"\nSubtotal: \t${Total}");
+            Console.WriteLine($"Sales tax: \t{ salestax.SalesTaxTendered() * 100}%");
 
             grandTotal = Math.Round(Total + (Total * salestax.SalesTaxTendered()), 2);
             return grandTotal;
