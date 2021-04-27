@@ -10,9 +10,9 @@ namespace CoffeeAndTea
         static void Main(string[] args)
         {
             Console.WriteLine("WELCOME to our COFFEE/TEA Shop!");
-            //decimal total = GetMenu();
-            //Console.WriteLine($"Your bill: ${total}");
-            PaymentSelection(10);
+            decimal GrandTotal = GetMenu();
+            Console.WriteLine($"Your bill: ${GrandTotal}");
+            PaymentSelection(GrandTotal);
             Console.ReadLine();
         }
 
@@ -50,16 +50,18 @@ namespace CoffeeAndTea
                 Console.WriteLine($"{counter}. {drinkDetails}");
             }
 
+
             List<string> itemOrderedList = new List<string>();
             List<decimal> listOfItemPriced = new List<decimal>();
             List<int> itemQtyList = new List<int>();
+
             int userQty = 0;
 
             Console.WriteLine("Which drink would you like to purcahse:? Choose a number:");
             while (true)
             {
-                int userinput = int.Parse(Console.ReadLine());
-                
+                int userinput = int.Parse(Console.ReadLine()); //?
+
                 int counter2 = 0;
                 //this foreach grab an item per user selection
                 foreach (Drinks userChoice in menu)
@@ -68,12 +70,12 @@ namespace CoffeeAndTea
                     counter2++;
                     if (counter2 == userinput)
                     {
-                        Console.WriteLine($"{ userChoice.Name} \t{ userChoice.Price }");
+                        Console.WriteLine($"{ userChoice.Name} \t${ userChoice.Price }");
 
-                        Console.WriteLine($"How many of { userChoice.Name } would you like?");
+                        Console.WriteLine($"How many { userChoice.Name } would you like?");
                         userQty = int.Parse(Console.ReadLine());
 
-                        Console.WriteLine($"{userQty} { userChoice.Name} \t{ userChoice.Price * userQty }");
+                        Console.WriteLine($"{userQty} { userChoice.Name} \t${ userChoice.Price * userQty }");
 
                         //userChoice.Price *= userQty;
                         itemQtyList.Add(userQty);
@@ -86,7 +88,7 @@ namespace CoffeeAndTea
                 Console.WriteLine("Would you like to add more items? y/n");
                 while (true)
                 {
-                    string addCheck = Console.ReadLine();
+                    string addCheck = Console.ReadLine().ToLower().Trim();
                     if (addCheck == "y")
                     {
                         Console.WriteLine("What addtional items do you want?");
@@ -114,20 +116,20 @@ namespace CoffeeAndTea
             Console.WriteLine("These are your items:");
             for (int i = 0; i < itemOrderedList.Count; i++)
             {
-                Console.WriteLine($"{itemQtyList[i]} {itemOrderedList[i] } \t{listOfItemPriced[i] * itemQtyList[i]}");
+                Console.WriteLine($"{itemQtyList[i]} {itemOrderedList[i] } \t${listOfItemPriced[i] * itemQtyList[i]}");
             }
-            Console.WriteLine($"You bought: \t{userQty * itemOrderedList.Count } items.");
+            Console.WriteLine($"You bought: \t{itemQtyList.Count * userQty } items"); // there a bug here
 
             PaymentDetails salestax = new PaymentDetails();
             decimal Total = 0, grandTotal;
-            
+
             foreach (decimal value in listOfItemPriced)//add all values into averagePrice
             {
                 Total += value;
             }
             Total *= userQty;
             Console.WriteLine($"Total before tax: \t{Total}");
-            Console.WriteLine($"Sales Tax: \t{ salestax.SalesTaxTendered() *100 }%");
+            Console.WriteLine($"Sales Tax: \t{ salestax.SalesTaxTendered()* 100}%");
 
             grandTotal = Math.Round(Total + (Total * salestax.SalesTaxTendered()), 2);
             return grandTotal;
@@ -151,7 +153,7 @@ namespace CoffeeAndTea
                         if (ValidateUserInput.StringIsNumeric(cashFromUserStr) && cashFromUserStr != "" && decimal.Parse(cashFromUserStr) >= totalFromReceipt)
                         {
                             decimal cashFromUserDec = decimal.Parse(cashFromUserStr);
-                            Console.Clear();
+                            Console.WriteLine();
                             // I will need the the total receipt again
                             Console.WriteLine($"Cash Tender: \t${ cashFromUserDec }");
                             decimal changesToGiveBack = totalFromReceipt - cashFromUserDec;
@@ -161,7 +163,7 @@ namespace CoffeeAndTea
                         else
                         {
                             Console.WriteLine($"Invalid entry! Enter cash greater than { totalFromReceipt }");
-                        }                        
+                        }
                     }
                     break;
                 }
@@ -173,7 +175,7 @@ namespace CoffeeAndTea
                     break;
                 }
                 else if (paymentMethodChosen == "3")
-                {                    
+                {
                     PaymentType pt = TakingCheckPayments(totalFromReceipt);
                     pd.TakingPayment(pt);
                     break;
@@ -219,7 +221,7 @@ namespace CoffeeAndTea
                 }
                 else if (ValidateUserInput.StringIsNumeric(creditCardNumber) == false)
                 {
-                    Console.WriteLine("Invalid entry. Please enter your name");
+                    Console.WriteLine("Invalid entry. Please enter your credit number");
                 }
                 else
                 {
